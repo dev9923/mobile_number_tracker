@@ -20,3 +20,38 @@ app.get('/get-location/:phone', (req, res) => {
 });
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
+const express = require("express");
+const app = express();
+const axios = require("axios");
+
+// Optional: add CORS support
+const cors = require("cors");
+app.use(cors());
+
+app.get("/", (req, res) => {
+  res.send("✅ Mobile Number Tracker API is running!");
+});
+
+// ➕ Add this /track route
+app.get("/track", async (req, res) => {
+  const number = req.query.number;
+
+  if (!number) {
+    return res.status(400).json({ error: "Missing number query param" });
+  }
+
+  // ✅ Dummy data (replace with real API call later)
+  res.json({
+    number: number,
+    country: "India",
+    location: "Delhi",
+    carrier: "Airtel",
+    line_type: "Mobile",
+  });
+});
+
+// 🔊 Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
