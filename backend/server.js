@@ -21,7 +21,6 @@ app.get('/get-location/:phone', (req, res) => {
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
 const express = require("express");
-const app = express();
 const axios = require("axios");
 
 // Optional: add CORS support
