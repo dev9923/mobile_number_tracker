@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mobile Number Tracker</title>
+
+  <!-- ✅ External stylesheet -->
+  <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <style>
     body {
@@ -14,9 +17,18 @@
       align-items: center;
       margin-top: 60px;
     }
+
     h2 {
       color: #333;
     }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
     input {
       padding: 10px;
       font-size: 16px;
@@ -24,16 +36,17 @@
       border: 1px solid #ccc;
       border-radius: 6px;
     }
+
     button {
       padding: 10px 20px;
       font-size: 16px;
-      margin-top: 10px;
       background-color: #4CAF50;
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
     }
+
     #result {
       margin-top: 20px;
       background: white;
@@ -42,6 +55,7 @@
       width: 300px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
+
     #map {
       width: 90%;
       max-width: 600px;
@@ -54,8 +68,12 @@
 </head>
 <body>
   <h2>Mobile Number Tracker</h2>
-  <input type="text" id="phoneNumber" placeholder="Enter phone number with country code" />
-  <button onclick="trackNumber()">Track</button>
+
+  <form id="tracker-form">
+    <input type="text" id="number-input" placeholder="Enter mobile number with country code" />
+    <button type="submit">Track Number</button>
+  </form>
+
   <div id="result"></div>
   <div id="map"></div>
 
@@ -64,10 +82,13 @@
   <script>
     let map, marker;
 
-    async function trackNumber() {
-      const phone = document.getElementById('phoneNumber').value;
+    document.getElementById('tracker-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const phone = document.getElementById('number-input').value;
       const resultDiv = document.getElementById('result');
       const mapDiv = document.getElementById('map');
+
       resultDiv.innerHTML = "🔍 Tracking...";
       mapDiv.style.display = "none";
 
@@ -107,7 +128,7 @@
         resultDiv.innerHTML = "❌ Error: " + (err.response?.data?.error || "Unable to track number.");
         mapDiv.style.display = "none";
       }
-    }
+    });
   </script>
 </body>
 </html>
