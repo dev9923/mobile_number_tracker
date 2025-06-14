@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mobile Number Tracker</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -41,6 +42,14 @@
       width: 300px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
+    #map {
+      width: 90%;
+      max-width: 600px;
+      height: 400px;
+      margin-top: 20px;
+      border-radius: 8px;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -48,24 +57,55 @@
   <input type="text" id="phoneNumber" placeholder="Enter phone number with country code" />
   <button onclick="trackNumber()">Track</button>
   <div id="result"></div>
+  <div id="map"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
   <script>
+    let map, marker;
+
     async function trackNumber() {
       const phone = document.getElementById('phoneNumber').value;
       const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = "Tracking...";
+      const mapDiv = document.getElementById('map');
+      resultDiv.innerHTML = "🔍 Tracking...";
+      mapDiv.style.display = "none";
+
       try {
         const response = await axios.post('/api/track', { phone });
         const data = response.data;
+
         resultDiv.innerHTML = `
-          <strong>Country:</strong> ${data.country_name} <br/>
+          <strong>Country:</strong> ${data.country_name || 'N/A'} <br/>
           <strong>Location:</strong> ${data.location || 'N/A'} <br/>
           <strong>Carrier:</strong> ${data.carrier || 'N/A'} <br/>
           <strong>Line Type:</strong> ${data.line_type || 'N/A'} <br/>
         `;
+
+        if (data.coordinates && data.coordinates.lat && data.coordinates.lng) {
+          mapDiv.style.display = "block";
+          const { lat, lng } = data.coordinates;
+
+          if (!map) {
+            map = L.map('map').setView([lat, lng], 10);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            marker = L.marker([lat, lng]).addTo(map);
+          } else {
+            map.setView([lat, lng], 10);
+            marker.setLatLng([lat, lng]);
+          }
+
+          marker.bindPopup(data.location || "Location").openPopup();
+        } else {
+          mapDiv.style.display = "none";
+          resultDiv.innerHTML += `<br/><small>⚠️ No coordinates available for map.</small>`;
+        }
       } catch (err) {
-        resultDiv.innerHTML = "Error: " + (err.response?.data?.error || "Unable to track number");
+        console.error(err);
+        resultDiv.innerHTML = "❌ Error: " + (err.response?.data?.error || "Unable to track number.");
+        mapDiv.style.display = "none";
       }
     }
   </script>
