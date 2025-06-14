@@ -6,7 +6,6 @@ const path = require('path');
 const app = express();
 app.use(express.static(path.join(__dirname, 'frontend'))); // place index.html inside "frontend" folder
 
-const app = express();
 app.use(cors());
 
 app.get("/", (req, res) => {
