@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Mobile Number Tracker</title>
 
-  <!-- ✅ External stylesheet -->
-  <link rel="stylesheet" href="style.css" />
+  <!-- External Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -15,11 +15,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-top: 60px;
+      padding: 40px 20px;
     }
 
     h2 {
       color: #333;
+      margin-bottom: 20px;
     }
 
     form {
@@ -67,10 +68,10 @@
   </style>
 </head>
 <body>
-  <h2>Mobile Number Tracker</h2>
+  <h2>📱 Mobile Number Tracker</h2>
 
   <form id="tracker-form">
-    <input type="text" id="number-input" placeholder="Enter mobile number with country code" />
+    <input type="text" id="number-input" placeholder="Enter mobile number with country code (e.g. +14155552671)" required />
     <button type="submit">Track Number</button>
   </form>
 
@@ -85,25 +86,30 @@
     document.getElementById('tracker-form').addEventListener('submit', async function (e) {
       e.preventDefault();
 
-      const phone = document.getElementById('number-input').value;
+      const phone = document.getElementById('number-input').value.trim();
       const resultDiv = document.getElementById('result');
       const mapDiv = document.getElementById('map');
+
+      if (!phone) {
+        resultDiv.innerHTML = "⚠️ Please enter a phone number.";
+        return;
+      }
 
       resultDiv.innerHTML = "🔍 Tracking...";
       mapDiv.style.display = "none";
 
       try {
-        const response = await axios.post('/api/track', { phone });
+        const response = await axios.get(`/track?number=${encodeURIComponent(phone)}`);
         const data = response.data;
 
         resultDiv.innerHTML = `
-          <strong>Country:</strong> ${data.country_name || 'N/A'} <br/>
+          <strong>Country:</strong> ${data.country || 'N/A'} <br/>
           <strong>Location:</strong> ${data.location || 'N/A'} <br/>
           <strong>Carrier:</strong> ${data.carrier || 'N/A'} <br/>
           <strong>Line Type:</strong> ${data.line_type || 'N/A'} <br/>
         `;
 
-        if (data.coordinates && data.coordinates.lat && data.coordinates.lng) {
+        if (data.coordinates?.lat && data.coordinates?.lng) {
           mapDiv.style.display = "block";
           const { lat, lng } = data.coordinates;
 
@@ -121,11 +127,11 @@
           marker.bindPopup(data.location || "Location").openPopup();
         } else {
           mapDiv.style.display = "none";
-          resultDiv.innerHTML += `<br/><small>⚠️ No coordinates available for map.</small>`;
+          resultDiv.innerHTML += `<br/><small>⚠️ No map coordinates available.</small>`;
         }
       } catch (err) {
         console.error(err);
-        resultDiv.innerHTML = "❌ Error: " + (err.response?.data?.error || "Unable to track number.");
+        resultDiv.innerHTML = "❌ Error: " + (err.response?.data?.error || "Could not track number.");
         mapDiv.style.display = "none";
       }
     });
