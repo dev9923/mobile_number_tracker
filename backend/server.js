@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'frontend'))); // place index.html inside "public" folder
 
 const app = express();
 app.use(cors());
@@ -51,3 +53,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`📡 Server running on port ${PORT}`);
 });
+
