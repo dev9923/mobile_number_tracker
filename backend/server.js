@@ -35,12 +35,15 @@ app.get("/track", async (req, res) => {
       return res.status(404).json({ error: "Invalid phone number" });
     }
 
+    const coords = geoRes.data.results[0]?.geometry || null;
+
     res.json({
       number: data.international_format,
       country: data.country_name,
       location: data.location,
       carrier: data.carrier,
       line_type: data.line_type,
+      coordinates: coords
     });
   } catch (err) {
     console.error("API Error:", err.message);
