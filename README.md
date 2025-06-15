@@ -35,8 +35,7 @@ cd mobile_number_tracker/backend
 # Install dependencies
 npm install
 
-# Then open your browser and go to:
-(https://mobile-number-tracker-0c99.onrender.com)
+
 
 
 
