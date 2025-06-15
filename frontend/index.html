@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackSecure Pro - Advanced Mobile Number Tracking Interface</title>
+    <meta name="description" content="Professional mobile number tracking interface for legitimate purposes including fleet management, parental controls, and emergency services.">
+    <meta name="keywords" content="mobile tracking, device tracking, fleet management, parental controls, location tracking">
+    <meta name="author" content="Devansh Bansal">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 12l2 2 4-4'/><path d='M21 12c.552 0 1-.448 1-1V5c0-.552-.448-1-1-1H3c-.552 0-1 .448-1 1v6c0 .552.448 1 1 1h18z'/></svg>">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Custom Styles -->
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* Dark mode styles */
+        .dark {
+            color-scheme: dark;
+        }
+        
+        /* Smooth transitions */
+        * {
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+        
+        /* Custom animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        /* Signal bars animation */
+        .signal-bar {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        border: "hsl(var(--border))",
+                        input: "hsl(var(--input))",
+                        ring: "hsl(var(--ring))",
+                        background: "hsl(var(--background))",
+                        foreground: "hsl(var(--foreground))",
+                        primary: {
+                            DEFAULT: "hsl(var(--primary))",
+                            foreground: "hsl(var(--primary-foreground))",
+                        },
+                        secondary: {
+                            DEFAULT: "hsl(var(--secondary))",
+                            foreground: "hsl(var(--secondary-foreground))",
+                        },
+                        destructive: {
+                            DEFAULT: "hsl(var(--destructive))",
+                            foreground: "hsl(var(--destructive-foreground))",
+                        },
+                        muted: {
+                            DEFAULT: "hsl(var(--muted))",
+                            foreground: "hsl(var(--muted-foreground))",
+                        },
+                        accent: {
+                            DEFAULT: "hsl(var(--accent))",
+                            foreground: "hsl(var(--accent-foreground))",
+                        },
+                        popover: {
+                            DEFAULT: "hsl(var(--popover))",
+                            foreground: "hsl(var(--popover-foreground))",
+                        },
+                        card: {
+                            DEFAULT: "hsl(var(--card))",
+                            foreground: "hsl(var(--card-foreground))",
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- CSS Variables for theming -->
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 222.2 84% 4.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 222.2 84% 4.9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 222.2 84% 4.9%;
+            --primary: 222.2 47.4% 11.2%;
+            --primary-foreground: 210 40% 98%;
+            --secondary: 210 40% 96%;
+            --secondary-foreground: 222.2 84% 4.9%;
+            --muted: 210 40% 96%;
+            --muted-foreground: 215.4 16.3% 46.9%;
+            --accent: 210 40% 96%;
+            --accent-foreground: 222.2 84% 4.9%;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 214.3 31.8% 91.4%;
+            --input: 214.3 31.8% 91.4%;
+            --ring: 222.2 84% 4.9%;
+        }
+        
+        .dark {
+            --background: 222.2 84% 4.9%;
+            --foreground: 210 40% 98%;
+            --card: 222.2 84% 4.9%;
+            --card-foreground: 210 40% 98%;
+            --popover: 222.2 84% 4.9%;
+            --popover-foreground: 210 40% 98%;
+            --primary: 210 40% 98%;
+            --primary-foreground: 222.2 47.4% 11.2%;
+            --secondary: 217.2 32.6% 17.5%;
+            --secondary-foreground: 210 40% 98%;
+            --muted: 217.2 32.6% 17.5%;
+            --muted-foreground: 215 20.2% 65.1%;
+            --accent: 217.2 32.6% 17.5%;
+            --accent-foreground: 210 40% 98%;
+            --destructive: 0 62.8% 30.6%;
+            --destructive-foreground: 210 40% 98%;
+            --border: 217.2 32.6% 17.5%;
+            --input: 217.2 32.6% 17.5%;
+            --ring: 212.7 26.8% 83.9%;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-background text-foreground">
+    <!-- Header -->
+    <header class="border-b bg-card">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="shield" class="h-8 w-8 text-primary"></i>
+                        <h1 class="text-2xl font-bold">TrackSecure Pro</h1>
+                    </div>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
+                        <i data-lucide="lock" class="h-3 w-3 mr-1"></i>
+                        Enterprise
+                    </span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                        <i data-lucide="download" class="h-4 w-4 mr-2"></i>
+                        Export Data
+                    </button>
+                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                        <i data-lucide="bell" class="h-4 w-4"></i>
+                    </button>
+                    <button id="theme-toggle" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                        <i data-lucide="sun" class="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"></i>
+                        <i data-lucide="moon" class="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"></i>
+                        <span class="sr-only">Toggle theme</span>
+                    </button>
+                    <div class="relative inline-flex h-8 w-8 shrink-0 overflow-hidden rounded-full">
+                        <img class="aspect-square h-full w-full" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23ddd'/><text x='50' y='50' text-anchor='middle' dy='0.3em' font-family='Arial' font-size='40' fill='%23999'>AD</text></svg>" alt="Avatar" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-6">
+        <!-- Legal Notice -->
+        <div class="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-6 animate-fade-in">
+            <div class="flex items-start space-x-3">
+                <i data-lucide="alert-triangle" class="h-5 w-5 text-amber-600 mt-0.5"></i>
+                <div class="text-sm text-amber-800">
+                    <p class="font-medium mb-1">Legal Compliance Notice</p>
+                    <p>
+                        This tracking system is designed for legitimate purposes only. Ensure you have proper consent and
+                        legal authority before tracking any device. Unauthorized tracking may violate privacy laws.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm animate-fade-in">
+                <div class="flex flex-row items-center justify-between space-y-0 p-6 pb-2">
+                    <h3 class="tracking-tight text-sm font-medium">Active Devices</h3>
+                    <i data-lucide="phone" class="h-4 w-4 text-muted-foreground"></i>
+                </div>
+                <div class="p-6 pt-0">
+                    <div class="text-2xl font-bold">12</div>
+                    <p class="text-xs text-muted-foreground">+2 from last week</p>
+                </div>
+            </div>
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm animate-fade-in">
+                <div class="flex flex-row items-center justify-between space-y-0 p-6 pb-2">
+                    <h3 class="tracking-tight text-sm font-medium">Online Now</h3>
+                    <i data-lucide="activity" class="h-4 w-4 text-muted-foreground"></i>
+                </div>
+                <div class="p-6 pt-0">
+                    <div class="text-2xl font-bold">8</div>
+                    <p class="text-xs text-muted-foreground">67% availability</p>
+                </div>
+            </div>
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm animate-fade-in">
+                <div class="flex flex-row items-center justify-between space-y-0 p-6 pb-2">
+                    <h3 class="tracking-tight text-sm font-medium">Alerts Today</h3>
+                    <i data-lucide="alert-triangle" class="h-4 w-4 text-muted-foreground"></i>
+                </div>
+                <div class="p-6 pt-0">
+                    <div class="text-2xl font-bold">3</div>
+                    <p class="text-xs text-muted-foreground">2 resolved</p>
+                </div>
+            </div>
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm animate-fade-in">
+                <div class="flex flex-row items-center justify-between space-y-0 p-6 pb-2">
+                    <h3 class="tracking-tight text-sm font-medium">Geofences</h3>
+                    <i data-lucide="map-pin" class="h-4 w-4 text-muted-foreground"></i>
+                </div>
+                <div class="p-6 pt-0">
+                    <div class="text-2xl font-bold">5</div>
+                    <p class="text-xs text-muted-foreground">2 active zones</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="space-y-6">
+            <div class="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-full">
+                <button class="tab-button active inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1" data-tab="dashboard">
+                    Dashboard
+                </button>
+                <button class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1" data-tab="tracking">
+                    Live Tracking
+                </button>
+                <button class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1" data-tab="number-tracker">
+                    Number Tracker
+                </button>
+                <button class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1" data-tab="history">
+                    History
+                </button>
+                <button class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1" data-tab="geofencing">
+                    Geofencing
+                </button>
+                <button class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1" data-tab="analytics">
+                    Analytics
+                </button>
+                <button class="tab-button inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm flex-1" data-tab="settings">
+                    Settings
+                </button>
+            </div>
+
+            <!-- Dashboard Tab Content -->
+            <div id="dashboard" class="tab-content space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Device List -->
+                    <div class="lg:col-span-2 rounded-lg border bg-card text-card-foreground shadow-sm">
+                        <div class="flex flex-col space-y-1.5 p-6">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-2xl font-semibold leading-none tracking-tight">Tracked Devices</h3>
+                                <div class="flex items-center space-x-2">
+                                    <input class="flex h-10 w-48 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" placeholder="Search devices..." />
+                                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                                        <i data-lucide="filter" class="h-4 w-4"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <div class="space-y-4">
+                                <!-- Device 1 -->
+                                <div class="flex items-center justify-between p-4 border rounded-lg">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="relative inline-flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
+                                            <img class="aspect-square h-full w-full" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23ddd'/><text x='50' y='50' text-anchor='middle' dy='0.3em' font-family='Arial' font-size='30' fill='%23999'>JI</text></svg>" alt="John's iPhone" />
+                                        </div>
+                                        <div>
+                                            <h4 class="font-medium">John's iPhone</h4>
+                                            <p class="text-sm text-muted-foreground">+1 (555) 123-4567</p>
+                                            <div class="flex items-center space-x-4 mt-1">
+                                                <div class="flex items-center space-x-1">
+                                                    <i data-lucide="map-pin" class="h-3 w-3"></i>
+                                                    <span class="text-xs">New York, NY</span>
+                                                </div>
+                                                <div class="flex items-center space-x-1">
+                                                    <i data-lucide="clock" class="h-3 w-3"></i>
+                                                    <span class="text-xs">2 minutes ago</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-4">
+                                        <div class="text-right">
+                                            <div class="flex items-center space-x-2 mb-1">
+                                                <i data-lucide="battery" class="h-4 w-4"></i>
+                                                <span class="text-sm">85%</span>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <i data-lucide="signal" class="h-4 w-4"></i>
+                                                <div class="flex space-x-1">
+                                                    <div class="w-1 h-3 rounded bg-green-500 signal-bar"></div>
+                                                    <div class="w-1 h-3 rounded bg-green-500 signal-bar"></div>
+                                                    <div class="w-1 h-3 rounded bg-green-500 signal-bar"></div>
+                                                    <div class="w-1 h-3 rounded bg-green-500 signal-bar"></div>
+                                                    <div class="w-1 h-3 rounded bg-gray-300"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-primary text-primary-foreground">online</span>
+                                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                                            <i data-lucide="eye" class="h-4 w-4"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Device 2 -->
+                                <div class="flex items-center justify-between p-4 border rounded-lg">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="relative inline-flex h-10 w-10 shrink-0 overflow-hidden rounded-full">
+                                            <img class="aspect-square h-full w-full" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23ddd'/><text x='50' y='50' text-anchor='middle' dy='0.3em' font-family='Arial' font-size='30' fill='%23999'>SS</text></svg>" alt="Sarah's Samsung" />
+                                        </div>
+                                        <div>
+                                            <h4 class="font-medium">Sarah's Samsung</h4>
+                                            <p class="text-sm text-muted-foreground">+1 (555) 987-6543</p>
+                                            <div class="flex items-center space-x-4 mt-1">
+                                                <div class="flex items-center space-x-1">
+                                                    <i data-lucide="map-pin" class="h-3 w-3"></i>
+                                                    <span class="text-xs">Los Angeles, CA</span>
+                                                </div>
+                                                <div class="flex items-center space-x-1">
+                                                    <i data-lucide="clock" class="h-3 w-3"></i>
+                                                    <span class="text-xs">1 hour ago</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-4">
+                                        <div class="text-right">
+                                            <div class="flex items-center space-x-2 mb-1">
+                                                <i data-lucide="battery" class="h-4 w-4"></i>
+                                                <span class="text-sm">23%</span>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <i data-lucide="signal" class="h-4 w-4"></i>
+                                                <div class="flex space-x-1">
+                                                    <div class="w-1 h-3 rounded bg-green-500"></div>
+                                                    <div class="w-1 h-3 rounded bg-green-500"></div>
+                                                    <div class="w-1 h-3 rounded bg-gray-300"></div>
+                                                    <div class="w-1 h-3 rounded bg-gray-300"></div>
+                                                    <div class="w-1 h-3 rounded bg-gray-300"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-secondary text-secondary-foreground">offline</span>
+                                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                                            <i data-lucide="eye" class="h-4 w-4"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Alerts -->
+                    <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                        <div class="flex flex-col space-y-1.5 p-6">
+                            <h3 class="text-2xl font-semibold leading-none tracking-tight">Recent Alerts</h3>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <div class="space-y-4">
+                                <div class="flex items-start space-x-3 p-3 border rounded-lg">
+                                    <div class="p-1 rounded-full bg-red-100">
+                                        <i data-lucide="alert-triangle" class="h-4 w-4 text-red-600"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium">John's iPhone left safe zone</p>
+                                        <p class="text-xs text-muted-foreground">5 min ago</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-3 p-3 border rounded-lg">
+                                    <div class="p-1 rounded-full bg-yellow-100">
+                                        <i data-lucide="alert-triangle" class="h-4 w-4 text-yellow-600"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium">Sarah's Samsung battery low (23%)</p>
+                                        <p class="text-xs text-muted-foreground">1 hour ago</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Number Tracker Tab Content -->
+            <div id="number-tracker" class="tab-content space-y-6 hidden">
+                <!-- Enhanced Legal Warning -->
+                <div class="rounded-lg border border-red-200 bg-red-50 p-6">
+                    <div class="flex items-start space-x-3">
+                        <i data-lucide="alert-triangle" class="h-6 w-6 text-red-600 mt-0.5"></i>
+                        <div class="text-sm text-red-800">
+                            <p class="font-bold mb-2">LEGAL AUTHORIZATION REQUIRED</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Only track numbers you own or have explicit legal authority to monitor</li>
+                                <li>Parental consent required for minors</li>
+                                <li>Employee consent required for business devices</li>
+                                <li>Law enforcement warrant may be required</li>
+                                <li>Unauthorized tracking is illegal and may result in criminal charges</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Number Tracker Form -->
+                    <div class="lg:col-span-2 rounded-lg border bg-card text-card-foreground shadow-sm">
+                        <div class="flex flex-col space-y-1.5 p-6">
+                            <h3 class="text-2xl font-semibold leading-none tracking-tight">Mobile Number Tracker</h3>
+                            <p class="text-sm text-muted-foreground">
+                                Track authorized mobile numbers with proper legal documentation
+                            </p>
+                        </div>
+                        <div class="p-6 pt-0 space-y-6">
+                            <!-- Authorization Verification -->
+                            <div class="rounded-lg border border-amber-200 bg-amber-50 p-4">
+                                <h4 class="text-sm font-semibold mb-3">Authorization Verification Required</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Authorization Type</label>
+                                        <select class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1">
+                                            <option value="">Select authorization</option>
+                                            <option value="owner">Device Owner</option>
+                                            <option value="parent">Parental Authority</option>
+                                            <option value="employer">Employer (Company Device)</option>
+                                            <option value="law-enforcement">Law Enforcement</option>
+                                            <option value="emergency">Emergency Services</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Authorization Document</label>
+                                        <input type="file" accept=".pdf,.doc,.docx,.jpg,.png" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1" />
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2 mt-4">
+                                    <input type="checkbox" id="legal-consent" class="rounded" />
+                                    <label for="legal-consent" class="text-sm">
+                                        I confirm I have legal authority to track this mobile number
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Number Input Section -->
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Mobile Number</label>
+                                    <div class="flex space-x-2 mt-1">
+                                        <select class="flex h-10 w-24 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                            <option value="+1">+1 (US)</option>
+                                            <option value="+44">+44 (UK)</option>
+                                            <option value="+91">+91 (IN)</option>
+                                            <option value="+86">+86 (CN)</option>
+                                            <option value="+49">+49 (DE)</option>
+                                        </select>
+                                        <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 flex-1" placeholder="Enter mobile number" />
+                                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4">
+                                            <i data-lucide="search" class="h-4 w-4 mr-2"></i>
+                                            Validate
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Tracking Reason</label>
+                                    <select class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1">
+                                        <option value="">Select reason</option>
+                                        <option value="safety">Child Safety Monitoring</option>
+                                        <option value="employee">Employee Device Tracking</option>
+                                        <option value="theft">Lost/Stolen Device Recovery</option>
+                                        <option value="emergency">Emergency Location Services</option>
+                                        <option value="fleet">Fleet Management</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Contact Name (Optional)</label>
+                                    <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-1" placeholder="John Doe" />
+                                </div>
+                            </div>
+
+                            <div class="flex space-x-4">
+                                <button disabled class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 flex-1">
+                                    <i data-lucide="map-pin" class="h-4 w-4 mr-2"></i>
+                                    Start Tracking
+                                </button>
+                                <button class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+                                    <i data-lucide="eye" class="h-4 w-4 mr-2"></i>
+                                    Test Connection
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Number Information & Status -->
+                    <div class="space-y-6">
+                        <!-- Carrier Information -->
+                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <div class="flex flex-col space-y-1.5 p-6">
+                                <h3 class="text-sm font-semibold leading-none tracking-tight">Number Information</h3>
+                            </div>
+                            <div class="p-6 pt-0">
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-muted-foreground">Carrier:</span>
+                                        <span>Verizon Wireless</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-muted-foreground">Type:</span>
+                                        <span>Mobile</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-muted-foreground">Region:</span>
+                                        <span>New York, NY</span>
+                                    </div>
+                                    <div class="flex justify-between text-sm">
+                                        <span class="text-muted-foreground">Status:</span>
+                                        <span class="inline-flex items-center rounded-full border px-2 py-1 text-xs font-medium">Active</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Current Status -->
+                        <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+                            <div class="flex flex-col space-y-1.5 p-6">
+                                <h3 class="text-sm font-semibold leading-none tracking-tight">Tracking Status</h3>
+                            </div>
+                            <div class="p-6 pt-0">
+                                <div class="text-center py-4">
+                                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i data-lucide="phone" class="h-8 w-8 text-gray-400"></i>
+                                    </div>
+                                    <p class="text-sm text-muted-foreground">No active tracking</p>
+                                    <p class="text-xs text-muted-foreground mt-1">Complete authorization to begin</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other tab contents would be similar... -->
+            <div id="tracking" class="tab-content space-y-6 hidden">
+                <div class="text-center py-12">
+                    <i data-lucide="globe" class="h-16 w-16 mx-auto mb-4 text-muted-foreground"></i>
+                    <h3 class="text-lg font-semibold mb-2">Live Tracking</h3>
+                    <p class="text-muted-foreground">Interactive map and real-time tracking controls would be displayed here</p>
+                </div>
+            </div>
+
+            <div id="history" class="tab-content space-y-6 hidden">
+                <div class="text-center py-12">
+                    <i data-lucide="clock" class="h-16 w-16 mx-auto mb-4 text-muted-foreground"></i>
+                    <h3 class="text-lg font-semibold mb-2">Location History</h3>
+                    <p class="text-muted-foreground">Historical location data and timeline would be displayed here</p>
+                </div>
+            </div>
+
+            <div id="geofencing" class="tab-content space-y-6 hidden">
+                <div class="text-center py-12">
+                    <i data-lucide="map-pin" class="h-16 w-16 mx-auto mb-4 text-muted-foreground"></i>
+                    <h3 class="text-lg font-semibold mb-2">Geofencing</h3>
+                    <p class="text-muted-foreground">Geofence management and map interface would be displayed here</p>
+                </div>
+            </div>
+
+            <div id="analytics" class="tab-content space-y-6 hidden">
+                <div class="text-center py-12">
+                    <i data-lucide="bar-chart-3" class="h-16 w-16 mx-auto mb-4 text-muted-foreground"></i>
+                    <h3 class="text-lg font-semibold mb-2">Analytics</h3>
+                    <p class="text-muted-foreground">Movement analytics and reporting charts would be displayed here</p>
+                </div>
+            </div>
+
+            <div id="settings" class="tab-content space-y-6 hidden">
+                <div class="text-center py-12">
+                    <i data-lucide="settings" class="h-16 w-16 mx-auto mb-4 text-muted-foreground"></i>
+                    <h3 class="text-lg font-semibold mb-2">Settings</h3>
+                    <p class="text-muted-foreground">Application settings and configuration options would be displayed here</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-12 border-t bg-card">
+        <div class="container mx-auto px-4 py-6">
+            <div class="text-center space-y-2">
+                <p class="text-sm text-muted-foreground">© 2025 TrackSecure Pro. All rights reserved.</p>
+                <p class="text-sm text-muted-foreground">
+                    Developed by <span class="font-medium text-foreground">Devansh Bansal</span>
+                </p>
+                <div class="flex items-center justify-center space-x-4 text-sm text-muted-foreground">
+                    <a href="mailto:devanshbansal500@gmail.com" class="flex items-center space-x-1 hover:text-foreground transition-colors">
+                        <span>📧</span>
+                        <span>devanshbansal500@gmail.com</span>
+                    </a>
+                    <span>|</span>
+                    <a href="tel:+918449779923" class="flex items-center space-x-1 hover:text-foreground transition-colors">
+                        <span>📞</span>
+                        <span>8449779923</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        
+        // Check for saved theme preference or default to light mode
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.classList.toggle('dark', savedTheme === 'dark');
+        
+        themeToggle.addEventListener('click', () => {
+            const isDark = html.classList.contains('dark');
+            html.classList.toggle('dark', !isDark);
+            localStorage.setItem('theme', !isDark ? 'dark' : 'light');
+        });
+
+        // Tab functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            tabContents.forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active class from all buttons
+            tabButtons.forEach(button => {
+                button.classList.remove('active', 'bg-background', 'text-foreground', 'shadow-sm');
+            });
+            
+            // Show selected tab content
+            const selectedTab = document.getElementById(tabName);
+            if (selectedTab) {
+                selectedTab.classList.remove('hidden');
+            }
+            
+            // Add active class to selected button
+            const selectedButton = document.querySelector(`[data-tab="${tabName}"]`);
+            if (selectedButton) {
+                selectedButton.classList.add('active', 'bg-background', 'text-foreground', 'shadow-sm');
+            }
+        }
+
+        // Add click event listeners to tab buttons
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabName = button.getAttribute('data-tab');
+                showTab(tabName);
+            });
+        });
+
+        // Show dashboard tab by default
+        showTab('dashboard');
+
+        // Add some interactive functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stats on load
+            const statCards = document.querySelectorAll('.animate-fade-in');
+            statCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+
+            // Add click handlers for interactive elements
+            const buttons = document.querySelectorAll('button:not(.tab-button):not(#theme-toggle)');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Add ripple effect
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.cssText = `
+                        position: absolute;
+                        width: ${size}px;
+                        height: ${size}px;
+                        left: ${x}px;
+                        top: ${y}px;
+                        background: rgba(255, 255, 255, 0.3);
+                        border-radius: 50%;
+                        transform: scale(0);
+                        animation: ripple 0.6s linear;
+                        pointer-events: none;
+                    `;
+                    
+                    this.style.position = 'relative';
+                    this.style.overflow = 'hidden';
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+        });
+
+        // Add ripple animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Simulate real-time updates
+        setInterval(() => {
+            const signalBars = document.querySelectorAll('.signal-bar');
+            signalBars.forEach(bar => {
+                bar.style.opacity = Math.random() > 0.3 ? '1' : '0.5';
+            });
+        }, 2000);
+
+        // Add notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transition-all duration-300 transform translate-x-full ${
+                type === 'success' ? 'bg-green-500 text-white' :
+                type === 'error' ? 'bg-red-500 text-white' :
+                type === 'warning' ? 'bg-yellow-500 text-black' :
+                'bg-blue-500 text-white'
+            }`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Slide in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Slide out and remove
+            setTimeout(() => {
+                notification.style.transform = 'translateX(full)';
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Example usage of notifications
+        setTimeout(() => {
+            showNotification('TrackSecure Pro interface loaded successfully!', 'success');
+        }, 1000);
+    </script>
+</body>
+</html>
